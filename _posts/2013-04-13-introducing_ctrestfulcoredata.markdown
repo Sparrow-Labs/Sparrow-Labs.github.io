@@ -1,4 +1,11 @@
-# Introducing SLRESTfulCoreData
+---
+layout: post
+title: Introducing SLRESTfulCoreDate
+---
+
+{{ page.title }}
+================
+
 
 Today I would like to introduce one of our Open Source Frameworks to you: SLRESTfulCoreData. In a nutshell, SLRESTfulCoreData lets you tie a REST API of a webservice easily to your CoreData model. By default SLRESTfulCoreData maps rails conventions (API communicating with JSON objects with underscored attributes and underscored URLs) into objc conventions. Everything is customizable and integration of other conventions is possible. I think the best approach to explain SLRESTfulCoreData is by example. So let's implement the [Github API](http://developer.github.com) in objc __ _real_ __ quick:
 
@@ -10,7 +17,7 @@ The inital project setup is an empty Xcode project with the following dependenci
 * [SLRESTfulCoreData](https://github.com/ebf/SLRESTfulCoreData)
 * [CTDataStoreManager](https://github.com/ebf/CTDataStoreManager): An `NSObject` subclass which implements a CoreData stack with 2 `NSManagedObjectContexts`. One main thread context and one background thread context. `CTDataStoreManager` keeps these contexts always in sync by merging changes automatically. A blog post about `CTDataStoreManager` will be coming in the future. The only thing you need to know right now is that we introduce a subclass `GHDataStoreManager` of `CTDataStoreManager` which will manage a CoreData stack for our GithubAPI with the following interface:
 
-```
+```objective-c
 @interface GHDataStoreManager : CTDataStoreManager
 
 @property (nonatomic, strong) NSManagedObjectModel *managedObjectModel;
@@ -26,7 +33,7 @@ The inital project setup is an empty Xcode project with the following dependenci
 
 Next, SLRESTfulCoreData needs an object which handles network communications. This has been abstracted with the following protocol:
 
-```
+```objective-c
 @protocol(SLRESTfulCoreDataBackgroundQueue)
 
 + (id<SLRESTfulCoreDataBackgroundQueue>)sharedQueue;
@@ -50,7 +57,7 @@ Next, SLRESTfulCoreData needs an object which handles network communications. Th
 
 This is super fast implemented thanks to AFNetworking in the `GHBackgroundQueue` class. Next we implement an initializer which sets up our SLRESTfulCoreData configuration:
 
-```
+```objective-c
 __attribute__((constructor))
 void GHInitializeSLRESTfulCoreData(void)
 {
@@ -79,7 +86,7 @@ The basic setup is done and we can start implementing our first model.
 
 Our first model to implement will be a user. The GithubAPI returns a specific user from the following route: `GET /users/:user` and returns a JSON object like
 
-```
+```objective-c
 {
   "login": "octocat",
   "id": 1,
@@ -96,7 +103,7 @@ Our first model to implement will be a user. The GithubAPI returns a specific us
 
 which we want to store in the following CoreData model:
 
-```
+```objective-c
 @interface GHUser : NSManagedObject
 
 @property (nonatomic, strong) NSNumber *identifier;
@@ -116,7 +123,7 @@ which we want to store in the following CoreData model:
 
 By default, SLRESTfulCoreData maps camelized objc attributes to underscored JSON object attributes. That mean for example by default `createdAt` will be mapped to `created_at`. Therefor we get the mapping for `login`, `name`, `company`, `blog`, `email` and `createdAt` for free. Custom attribute mapping can be done in the NSManagedObjctes subclasses initalizer like:
 
-```
+```objective-c
 @implementation GHUser
 
 + (void)initialize
@@ -133,7 +140,7 @@ By default, SLRESTfulCoreData maps camelized objc attributes to underscored JSON
 
 But wait? Is this DRY? Github has the convention to name all identifiers with an `id` suffix like `id` or `gravatar_id` and all URLs have an `url` suffix. We would like to introduce some conventions for our model too. If the Github API has `id` in an attribute name, we would like to automatically associate that with an `identifier` in objc. The same goes for `url` in JSON and `URL` in Objc. SLRESTfulCoreData supports these naming conventions and we can extend our Initilizer as follows:
 
-```
+```objective-c
 void GHInitializeSLRESTfulCoreData(void)
 {
     @autoreleasepool {
@@ -154,7 +161,7 @@ SLRESTfulCoreData also automatically type checks all attributes coming from the 
 
 To now fetch a user with a specific name from the Github API, we add a class method on `GHUser`:
 
-```
+```objective-c
 @interface GHUser : NSManagedObject
 
 + (void)userWithName:(NSString *)name completionHandler:(void(^)(GHUser *user, NSError *error))completionHandler;
@@ -178,7 +185,7 @@ SLRESTfulCoreData introduces a convenience method on NSManagedObject: `+[NSManag
 
 Now fetching a user is as easy as
 
-```
+```objective-c
 [GHUser userWithName:@"OliverLetterer" completionHandler:^(GHUser *user, NSError *error) {
     NSLog(@"%@", user);
 }];
@@ -190,7 +197,7 @@ and everything regarding the user model is encapsulated in `GHUser` class.
 
 Let's setup `GHRepository` real quick:
 
-```
+```json
 [
   {
     "id": 1296269,
@@ -230,7 +237,7 @@ Let's setup `GHRepository` real quick:
 
 ```
 
-```
+```objective-c
 @interface GHRepository : NSManagedObject
 
 @property (nonatomic, strong) NSNumber *identifier;
@@ -270,7 +277,7 @@ Notice the to-one relationship `owner`? Since the Github API returns a user obje
 
 GitHub provides the route `GET /users/:user/repos` for fetching repositories of a given user. SLRESTfuleCoreData extends `NSManagedObject` with `-[NSManagedObject fetchObjectsForRelationship:fromURL:completionHandler:]` for exactly that purpose. Let's first extend the relationship between our `GHUser` and `GHRepository` model on the user site:
 
-```
+```objective-c
 @interface GHUser : NSManagedObject
 
 ...
@@ -291,7 +298,7 @@ GitHub provides the route `GET /users/:user/repos` for fetching repositories of 
 
 and implement a corresponding method for fetching repositories from that URL:
 
-```
+```objective-c
 @interface GHUser : NSManagedObject
 
 ...
@@ -317,7 +324,7 @@ and implement a corresponding method for fetching repositories from that URL:
 
 That's it. The object graph with `GHRepository` instances is completly and correcty setup for you. The really interesting part is that since we are using CoreData, only one instance for a user per `identifier` is beeing allocated at runtime (actually two; one on the main thread and one on the backgronud thread). Let's take a look at the following snippet:
 
-```
+```objective-c
 [GHUser userWithName:@"OliverLetterer" completionHandler:^(GHUser *user, NSError *error) {
     [user repositoriesWithCompletionHandler:^(NSArray *repositories, NSError *error) {
         
@@ -332,7 +339,7 @@ The owner of each repository in the above example is equal to the user object an
 
 SLRESTfulCoreData now provides some cool techniques to make default tasks like fetching objects and fetching objects for relationsships easier. These will be demonstrated with the `repositories` relationship of `GHUser`:
 
-```
+```objective-c
 - (void)repositoriesWithCompletionHandler:(void(^)(NSArray *repositories, NSError *error))completionHandler
 {
     NSURL *URL = [NSURL URLWithString:[NSString stringWithFormat:@"/users/%@/repos", self.login]];
@@ -349,7 +356,7 @@ Building the corresponding URL can be quiet ugly in case you would have to worry
 
 Fetching objects for relationships in such a way seem like a repetitive task as well. Therefore, you can specify CRUD base URLs for each relationship in your initializer like:
 
-```
+```objective-c
 + (void)initialize
 {
     [self registerCRUDBaseURL:[NSURL URLWithString:@"/users/:login/repos"] forRelationship:@"repositories"];
@@ -357,7 +364,7 @@ Fetching objects for relationships in such a way seem like a repetitive task as 
 ```
 . SLRESTfulCoreData can now implement `-[GHUser repositoriesWithCompletionHandler:]` at runtime by implementing its own version of `+[NSManagedObject resolveInstanceMethod:]`. We can remove the implementation `-[GHUser repositoriesWithCompletionHandler:]` entirely and move the definition in the `CoreDataGeneratedAccessors` category:
 
-```
+```objective-c
 @interface GHUser (CoreDataGeneratedAccessors)
 
 - (void)repositoriesWithCompletionHandler:(void(^)(NSArray *repositories, NSError *error))completionHandler;
@@ -369,7 +376,7 @@ Fetching objects for relationships in such a way seem like a repetitive task as 
 
 To demonstrate the last set of features, we are going to implement the issue model. Here is what the JSON the API returns for an issue:
 
-```
+```json
 [
   {
     "url": "https://api.github.com/repos/octocat/Hello-World/issues/1347",
@@ -432,7 +439,7 @@ To demonstrate the last set of features, we are going to implement the issue mod
 
 For simplicity, we won't implement the labels or milestones model here. Our CoreData model will look like:
 
-```
+```objective-c
 @interface GHIssue : NSManagedObject
 
 @property (nonatomic, strong) NSNumber *number;
@@ -473,7 +480,7 @@ This will give us multiple things:
 
 * SLRESTfulCoreData provides the following methods at runtime for us:
 
-```
+```objective-c
 @interface GHRepository (CoreDataGeneratedAccessors)
 
 // GET /repos/:self.full_name/issues
@@ -490,7 +497,7 @@ This will give us multiple things:
 
 * SLRESTfulCoreData also provides the following CRUD methods for us:
 
-```
+```objective-c
 GHIssue *issue = [NSEntityDescription insertNewObjectForEntityForName:NSStringFromClass([GHIssue class])
                                                inManagedObjectContext:[GHDataStoreManager sharedInstance].mainThreadContext];
 issue.number = @1;
