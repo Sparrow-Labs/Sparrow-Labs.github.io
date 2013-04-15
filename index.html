@@ -4,14 +4,13 @@ title: Sparrow-Labs UG Development Blog
 ---
 
 <div class="wrapper">
-
   <section>
-    <h3>Welcome to the Sparrow-Labs Development Blog</h3>
-    {% for post in site.posts %}
-    <li><span>{{ post.date | date_to_string }}</span> &raquo; <a href="{{ post.url }}">{{ post.title }}</a></li>
-    {% endfor %}
-</section>
-<footer>
-    <p><small>Hosted on <a href="https://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
-</footer>
+      <h2>Welcome to the Sparrow-Labs Development Blog</h2>
+      {% for post in site.posts %}
+      <li><span>{{ post.date | date_to_string }}</span> &raquo; <a href="{{ post.url }}">{{ post.title }}</a></li>
+      {% endfor %}
+  </section>
+  <footer>
+      <p><small>Hosted on <a href="https://pages.github.com">GitHub Pages</a></small></p>
+  </footer>
 </div>
