@@ -300,6 +300,10 @@ a.github {
 	background: url(../images/octocat-small.png) no-repeat 1px;
 }
 
+a.back {
+  background: url(../images/arrow-left.png) no-repeat;
+}
+
 a.buttons:hover {
 	color: #fff;
 	text-decoration: none;
