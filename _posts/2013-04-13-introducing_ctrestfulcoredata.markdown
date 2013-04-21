@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Introducing SLRESTfulCoreDate
+author: oliverletterer
 ---
 
 {{ page.title }}

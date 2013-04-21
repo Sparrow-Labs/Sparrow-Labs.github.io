@@ -248,6 +248,10 @@ a.name {
 	white-space: nowrap;
 }
 
+a.author {
+  color: #4099FF;
+}
+
 header ul {
   list-style:none;
   padding:0;
