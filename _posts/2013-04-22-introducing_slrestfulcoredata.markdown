@@ -135,7 +135,7 @@ By default, SLRESTfulCoreData maps camelized objc attributes to underscored JSON
 @end
 ```
 
-But wait? Is this DRY? GitHub has the convention to give all attributenames containing identifiers an `id` suffix like in `gravatar_id` and all URLs have an `url` suffix. Of course, we would like to introduce some conventions for our own model as well. We would like to map an underscored JSON attribute containg `id` to a camelized objc attribute containing `identifier`. For example, `gravatar_id` should always be mapped to `gravatarIdentifier` and `some_id_value` to `someIdentifierValue`. SLRESTfulCoreData supports these naming conventions and we can extend our global Initilizer as follows:
+But wait? Is this DRY? GitHub has the convention to give all attribute names containing identifiers an `id` suffix like in `gravatar_id` and all URLs have an `url` suffix. Of course, we would like to introduce some conventions for our own model as well. We would like to map an underscored JSON attribute containg `id` to a camelized objc attribute containing `identifier`. For example, `gravatar_id` should always be mapped to `gravatarIdentifier` and `some_id_value` to `someIdentifierValue`. SLRESTfulCoreData supports these naming conventions and we can extend our global Initilizer as follows:
 
 ```
 void GHInitializeSLRESTfulCoreData(void)
@@ -178,7 +178,7 @@ To now fetch a user with a specific name from the GitHub API, we add a class met
 @end
 ```
 
-SLRESTfulCoreData introduces a convenience method on NSManagedObject: `+[NSManagedObject fetchObjectFromURL:completionHandler:]` which fetches a JSON object from the specified URL. Since each object has its own unique identifier stored in the `id` attribute, SLRESTfulCoreData will at first try to refresh an existing `GHUser` instance stored in the database. If no such object is found, a new `GHUser` object is being inserted in the database. This has the advantage, that at runtime, only __one__ `GHUser` instance per identifier is in memory (actually two; one on the main thread context and one on the background thread context).
+SLRESTfulCoreData introduces a convenience method on NSManagedObject: `+[NSManagedObject fetchObjectFromURL:completionHandler:]` which fetches a JSON object from the specified URL. Since each object has its own unique identifier stored in the `id` attribute, SLRESTfulCoreData will at first try to refresh an existing `GHUser` instance stored in the database. If no such object can be found, a new `GHUser` object is being inserted in the database. This has the advantage, that at runtime, only __one__ `GHUser` instance per identifier is in memory (actually two; one in the main thread context and one in the background thread context).
 
 Now fetching a user is as easy as
 
@@ -362,7 +362,7 @@ Fetching objects for relationships in such a way seem like a repetitive task as 
 
 ## CRUD support for models
 
-To demonstrate the last set of features, we are going to implement the issue model. Here is what the GitHub API returns for an issue:
+To demonstrate the last featureset, we are going to implement the issue model. Here is what the GitHub API returns for an issue:
 
 ```
 [
@@ -514,4 +514,4 @@ issue.repository = ...;
 ```
 
 
-If you like SLRESTfulCoreData, you can go ahead and take a look at the [Source Code](https://github.com/OliverLetterer/SLRESTfulCoreData), checkout out the [GitHubAPI](https://GitHub.com/OliverLetterer/GitHubAPI) sample project or [follow me on Twitter](https://twitter.com/oletterer).
+If you like what you see so far, you can go ahead and take a look at the [Source Code](https://github.com/OliverLetterer/SLRESTfulCoreData), checkout out the [GitHubAPI](https://GitHub.com/OliverLetterer/GitHubAPI) sample project or [follow me on Twitter](https://twitter.com/oletterer).
