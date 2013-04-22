@@ -1,7 +1,8 @@
 ---
 layout: post
-title: Introducing SLRESTfulCoreDate
+title: Introducing SLRESTfulCoreData
 author: oliverletterer
+active: no
 ---
 
 {{ page.title }}

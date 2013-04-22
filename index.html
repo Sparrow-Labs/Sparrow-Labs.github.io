@@ -7,11 +7,13 @@ title: Sparrow-Labs UG Development Blog
   <section>
       <h2>Welcome to the Sparrow-Labs Development Blog</h2>
       {% for post in site.posts %}
-      <li>
-        <span>{{ post.date | date_to_string }}</span> &raquo; <a href="{{ post.url }}">{{ post.title }}</a>
-        <b> by </b>
-        <a class="author" href="http://github.com/{{post.author}}">@{{post.author}}</a>
-      </li>
+        {% if post.active %}
+          <li>
+            <span>{{ post.date | date_to_string }}</span> &raquo; <a href="{{ post.url }}">{{ post.title }}</a>
+            <b> by </b>
+            <a class="author" href="http://github.com/{{post.author}}">@{{post.author}}</a>
+          </li>
+        {% endif %}
       {% endfor %}
   </section>
   <footer>
