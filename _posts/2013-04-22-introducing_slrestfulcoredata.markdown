@@ -7,7 +7,7 @@ author: oliverletterer
 {{ page.title }}
 ================
 
-Today, I would like to introduce one of our Open Source Frameworks to you: SLRESTfulCoreData. In a nutshell, SLRESTfulCoreData lets you tie a JSON REST API of a webservice easily to your CoreData model. By default SLRESTfulCoreData maps rails conventions (API communicating with JSON objects with underscored attribute names and underscored URLs) into objc conventions. Everything is customizable and integration of other conventions is possible. I think the best approach to explain SLRESTfulCoreData is by example. So let's implement the [GitHub API](http://developer.GitHub.com) in objc _real_ quick:
+Today, I would like to introduce one of our Open Source Frameworks to you: SLRESTfulCoreData. In a nutshell, SLRESTfulCoreData lets you tie a JSON REST API of a webservice easily to your CoreData model. By default SLRESTfulCoreData maps rails conventions (API communicating with JSON objects with underscored attribute names and underscored URLs) to objc conventions. Everything is customizable and integration of other conventions is possible. I think the best approach to explain SLRESTfulCoreData is by example. So let's implement the [GitHub API](http://developer.GitHub.com) in objc _real_ quick:
 
 ## Basic setup
 
