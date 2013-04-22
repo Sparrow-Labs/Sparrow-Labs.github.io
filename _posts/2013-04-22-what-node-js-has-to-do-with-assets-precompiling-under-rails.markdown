@@ -2,7 +2,6 @@
 layout: post
 title: About Node.js and precompiling assets under Rails
 author: ji
-active: yes
 ---
 
 # {{ page.title }}
