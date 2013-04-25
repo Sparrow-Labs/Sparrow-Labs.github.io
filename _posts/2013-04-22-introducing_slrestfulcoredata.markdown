@@ -14,7 +14,7 @@ Today, I would like to introduce one of our Open Source Frameworks to you: SLRES
 The inital project setup is an empty Xcode project with the following dependencies:
 
 * [AFNetworking](https://GitHub.com/AFNetworking/AFNetworking): Everyones favorite networking library which I guess I don't have to introduce here.
-* [SLRESTfulCoreData](https://GitHub.com/ebf/SLRESTfulCoreData)
+* [SLRESTfulCoreData](https://github.com/OliverLetterer/SLRESTfulCoreData)
 * [CTDataStoreManager](https://GitHub.com/ebf/CTDataStoreManager): An `NSObject` subclass which implements a CoreData stack with 2 `NSManagedObjectContexts`. One main thread context and one background thread context. `CTDataStoreManager` keeps these contexts always in sync by merging changes automatically. A blog post about `CTDataStoreManager` will be coming in the future. The only thing you need to know right now is that we introduce a subclass `GHDataStoreManager` of `CTDataStoreManager` which will manage a CoreData stack for our GitHubAPI and provide the following interface:
 
 ```
