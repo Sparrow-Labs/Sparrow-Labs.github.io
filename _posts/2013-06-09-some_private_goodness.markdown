@@ -2,7 +2,7 @@
 layout: post
 title: Some private Goodness
 author: oliverletterer
-inactive: true
+inactive: false
 ---
 
 {{ page.title }}
@@ -11,7 +11,7 @@ inactive: true
 Inspired by [@steipetes](https://twitter.com/steipete) awesome UIKonf talk [How to bend UIKit to your will](http://www.uikonf.com/speakers/peter_steinberger.html), in which he discusses when and where to use private APIs, I decided to open source one of my hacks where we are using private APIs.
 
 ## Introducing section locations
-Imaging the following scenario: You have this great design for a custom grouped UITableView which you want to implement. That means you would need to know the location in each section in your UITableViewCell subclass. Since there are no public APIs for this, a first approach for this might be to introduce for own custom section location type
+Imaging the following scenario: You have this great design for a custom __grouped__ UITableView which you want to implement. That means your UITableViewCell subclass would need to know it if is at the top, center or bottom of the current section. Since there are no public APIs for this, a first approach for this might be to introduce your own custom section location type
 
 ```
 typedef enum {
@@ -25,7 +25,7 @@ typedef enum {
 and calculate and apply it in
 
 ```
-- (UITableViewCell *)cellForRowAtIndexPath:(NSIndexPath *)indexPath
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	// grab a cell
 	UITableViewCellSubclass *cell = ...;
@@ -42,11 +42,11 @@ and calculate and apply it in
 
 ## Where things get ugly
 
-This all works out pretty well as long as your UITableView content is static and doesn't change. In case you insert or delete any rows at runtime, you will need to reload all surrounding cells where the section location changes. This might get messy but is still doable. Now let's say you would want to support reordering cells as well by implementing `-[UITableViewDataSource tableView:canMoveRowAtIndexPath:]`. While the user is dragging a cell around the screen, the section location changes. The UITableView isn't giving you any callbacks or ways to know when these changes occure and you end up with a bad UX. If there was just an Apple provided API for this ...
+This all works out pretty well as long as your UITableView content is static and doesn't change. In case you insert or delete any rows at runtime, you will need to reload all surrounding cells where the section location changes. This might get messy but is still doable. Now let's say you would want to support reordering cells as well by implementing `-[UITableViewDataSource tableView:canMoveRowAtIndexPath:]`. While the user is dragging around a cell on the screen, the section location changes. The UITableView isn't giving you any callbacks or ways to know when these changes occure and you end up with a bad UX. If there was just an Apple provided API for this ...
 
 ## The private Goodness: `-[UITableViewCell setSectionLocation:animated:]`
 
-It turns out that Apple ships and supports the following private API
+It turns out that Apple ships and supports the following private APIs
 
 ```
 @interface UITableViewCell
@@ -58,9 +58,9 @@ It turns out that Apple ships and supports the following private API
 @end
 ```
 
-since at least [__iOS 2.1__](https://github.com/nst/iOS-Runtime-Headers/blob/2.1/Frameworks/UIKit.framework/UITableViewCell.h) up until __iOS 6.1__ of this writing. There are a few [Radars out there](http://openradar.appspot.com/11829507) demanding these APIs to be public. Since Apple is supporting these APIs for such a long time, it is likely for Apple to make them public at some point and don't suddenly remove them. This might possibly happen with iOS 7 or not. Until that happens, we decided to make these API available for any UITableViewCell subclass without worrying about AppStore rejection.
+since at least [__iOS 2.1__](https://github.com/nst/iOS-Runtime-Headers/blob/2.1/Frameworks/UIKit.framework/UITableViewCell.h) up until __iOS 6.1__ of this writing. There are a few [Radars out there](http://openradar.appspot.com/11829507) demanding these APIs to be public. Since Apple is supporting these APIs for such a long time, it is likely for Apple to make them public at some point and don't suddenly remove them. This might possibly happen with iOS 7 or not. Until that happens, we decided to make these APIs available for any UITableViewCell subclass without worrying about AppStore rejection.
 
-## Hacking at runtime
+## The runtime magic
 
 Implementing these methods at compile time will most likely get you rejected by Apple. So we decided to expose this _new_ public interface:
 
@@ -100,7 +100,7 @@ which you can implement at runtime and call super on. At runtime, `UITableViewCe
 }
 ```
 
-The default implementation for `setForbiddenSectionLocation:animated:` call the original implementation of `setSectionLocation:animated:` if it is available at runtime:
+The default implementation for `setForbiddenSectionLocation:animated:` calls the original implementation of `setSectionLocation:animated:` if it is available at runtime:
 
 ```
 - (void)setForbiddenSectionLocation:(SLUITableViewCellSectionLocation)location animated:(BOOL)animated
