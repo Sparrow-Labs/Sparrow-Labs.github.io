@@ -2,7 +2,6 @@
 layout: post
 title: Some private Goodness
 author: oliverletterer
-inactive: false
 ---
 
 {{ page.title }}
