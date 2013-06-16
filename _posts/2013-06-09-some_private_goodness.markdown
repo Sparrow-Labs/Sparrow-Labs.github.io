@@ -10,6 +10,8 @@ authorname: Oliver Letterer
 
 Inspired by [@steipetes](https://twitter.com/steipete) awesome UIKonf talk [How to bend UIKit to your will](http://www.uikonf.com/speakers/peter_steinberger.html), in which he discusses when and where to use private APIs, I decided to open source one of my hacks where we are using private APIs.
 
+<!--- end preview -->
+
 ## Introducing section locations
 Imaging the following scenario: You have this great design for a custom __grouped__ UITableView which you want to implement. That means your UITableViewCell subclass would need to know it if is at the top, center or bottom of the current section. Since there are no public APIs for this, a first approach for this might be to introduce your own custom section location type
 

@@ -12,6 +12,8 @@ A couple of days ago a shocking mystery revealed it's dark face as a fellow deve
 his rails assets and got a strange error, that one of his _js.coffee_ files appeared to have an incompatible character encoding and
 thus could not be parsed.
 
+<!--- end preview -->
+
 Now for this post to make sense to you, let's first talk a little bit about the setup. Our customer develops a rails application, which
 has to be deployed on Windows. Since deployment possibilities under Windows are kind of limited we precompile the assets on our developer machines and later copy over everything via capistrano.
 Having this deployment setup in mind let's have a look at the mystical character encoding error on our fellow dev's console:
