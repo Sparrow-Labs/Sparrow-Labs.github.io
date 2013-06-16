@@ -4,3 +4,9 @@
 markdown: redcarpet
 pygments: true
 auto: true
+
+name: Sparrow-Labs Development Blog
+description: The Sparrow-Labs Development Blog.
+url: http://sparrow-labs.github.io
+# url: http://blog.sparrow-labs.de
+
