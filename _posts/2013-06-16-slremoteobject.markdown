@@ -3,7 +3,6 @@ layout: post
 title: "SLRemoteObject: It's just an objc RPC framework for your local network"
 author: oliverletterer
 authorname: Oliver Letterer
-inactive: true
 ---
 
 {{ page.title }}
@@ -18,7 +17,7 @@ With this and the following blog posts, I will talk about some awesome features 
 Imaging the following two scenarios:
 
 1. You are developing a turn based game with a multiplayer mode which should allow two or more players in the same network to play together.
-2. You are developing some kind of system (which we are currently doing) that in addition to a global cloud needs some communication between devices in the local network and it's cheaper for you to handle this communication directly between these devices instead of communication over let's say web sockets with the cloud.
+2. You are developing some kind of system (which we are currently doing) that in addition to a global cloud needs some communication between devices in the local network and it's cheaper for you to handle this communication directly between these devices instead of communicating over let's say web sockets with the cloud.
 
 In both of these scenarios, you need some way to send a message from one device to another device to inform it that something has happened. I will be calling the message sending device the `client device` and the message receiving device the `server device` from now on. My first approach has been to run an HTTP server on the server device and broadcast it over a bonjour services. But since both devices are running on iOS with the objc runtime, I decided to take a slightly different approach here. So let's take a look at how SLRemoteObject sends a message from the client device to the server device:
 
@@ -49,10 +48,10 @@ SLRemoteObjectProxy *proxy = [[SLRemoteObjectProxy alloc]
     }];
 ```
 
-* The service name must be a unique key in your local network and is used by SLRemoteObject to broadcast this service via `NSNetService` to allow easy discoverability for your client devices.
+* The service name must be a unique key in your local network and is used by SLRemoteObjectProxy to broadcast this service via `NSNetService` to allow easy discoverability for your client devices.
 * The target will be invoked with all received objc messages.
 * The protocol is the protocol over which you want to communicate.
-* The options let's you specify some options like SSL or symmetric encryption. In this introduction post, I will leave encryption out but SLRemoteObject is using `Security/SecureTransport.h` and `SSLContextRef` to achieve assymetric encryption. Feel free to take a look at the source code in case you are interested on how this works.
+* The options let's you specify some options like SSL or symmetric encryption. In this introduction post, I will leave encryption out but SLRemoteObject is using `Security/SecureTransport.h` and `SSLContextRef` to achieve asymmetric encryption. Feel free to take a look at the source code in case you are interested on how this works.
 * The completion handler will be executed as soon as the SLRemoteObjectProxy instance is ready to receive any incoming messages.
 
 Setting up the client device is as easy as setting up the server device (step two):
@@ -65,7 +64,7 @@ id<SampleProtocol> remoteObject = [SLRemoteObject
 ```
 
 * The service name must be the same as the service name you specified on your server device.
-* The protocol must be the same protocol you passed into your SLRemoteObjectProxy instance. In case these protocols don't match by 100 percent, SLRemoteObject will always fail with an incompatibility error to not cause any crashes at runtime related to incompatible protocols.
+* The protocol must be the same protocol you passed into your SLRemoteObjectProxy instance. In case these protocols don't match by 100 percent, SLRemoteObject will always fail with an incompatibility error to not cause any crashes at runtime.
 * You can specify the same encryption options here as well.
 
 As soon as the SLRemoteObject instance has been created, you can start sending messages to your server device by simply calling any of the optional protocol methods on your client device:
