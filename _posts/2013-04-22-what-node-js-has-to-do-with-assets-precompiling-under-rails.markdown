@@ -2,6 +2,7 @@
 layout: post
 title: About Node.js and precompiling assets under Rails
 author: ji
+authorname: Yovoslav Ivanov
 ---
 
 # {{ page.title }}

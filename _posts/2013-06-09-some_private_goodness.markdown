@@ -2,6 +2,7 @@
 layout: post
 title: Some private Goodness
 author: oliverletterer
+authorname: Oliver Letterer
 ---
 
 {{ page.title }}
