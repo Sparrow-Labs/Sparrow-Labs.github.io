@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Why we need more control over the status bar in iOS 7"
-author: oliverletterer
+author: oletterer
 authorname: Oliver Letterer
 ---
 

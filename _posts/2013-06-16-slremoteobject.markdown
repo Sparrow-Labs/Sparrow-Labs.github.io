@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "SLRemoteObject: It's just an objc RPC framework for your local network"
-author: oliverletterer
+author: oletterer
 authorname: Oliver Letterer
 ---
 

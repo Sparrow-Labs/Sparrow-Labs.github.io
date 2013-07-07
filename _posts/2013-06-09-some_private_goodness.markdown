@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Some private Goodness
-author: oliverletterer
+author: oletterer
 authorname: Oliver Letterer
 ---
 

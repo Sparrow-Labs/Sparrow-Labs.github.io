@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Introducing SLRESTfulCoreData
-author: oliverletterer
+author: oletterer
 authorname: Oliver Letterer
 ---
 
